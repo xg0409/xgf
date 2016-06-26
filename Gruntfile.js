@@ -68,7 +68,7 @@ module.exports = function(grunt) {
     }
   });
 
-  require("./compiler/")(grunt);
+  require('./compiler')(grunt);
 
   // The development server (the recommended option for development)
   grunt.registerTask("default", ["webpack-dev-server:start"]);
