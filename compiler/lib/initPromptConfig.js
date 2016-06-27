@@ -25,7 +25,7 @@ function initPromptConfig() {
 
     Object.keys(projectsConfig).forEach(function (projectName) {
         var submoduleObject = {
-            config: projectName + '_project_' + "submodule",
+            config: "submodule_item",
             type: 'list',
             message: 'select ' + projectName + ' project submodule',
             when: function (answers) {
