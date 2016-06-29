@@ -13,7 +13,7 @@ var defaultConfig = {
 };
 
 function prepareConfiguration() {
-    
+
     var optionsConfig = buildConfig.options || {};
     var projectsConfig = buildConfig.projects || {};
 
