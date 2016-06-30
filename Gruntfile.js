@@ -16,7 +16,9 @@ module.exports = function(grunt) {
             }
           }),
           new webpack.optimize.DedupePlugin(),
-          new webpack.optimize.UglifyJsPlugin()
+          new webpack.optimize.UglifyJsPlugin({
+            sourceMap: false
+          })
         ),
         output: {
           publicPath:"http://css.40017.com/webapp/"
@@ -40,7 +42,6 @@ module.exports = function(grunt) {
         historyApiFallback: true,
         host: "localhost",
         port: 3002,
-        keepAlive: true,
         webpack: {
           devtool: "eval",
           debug: true
@@ -50,7 +51,7 @@ module.exports = function(grunt) {
 
     nodemon: {
       server: {
-        script: './bin/projects.js',
+        script: './bin/app.js',
         options: {
           nodeArgs: [ /*'--debug' */ ],
           ignore: ['node_modules/**'],

@@ -3,6 +3,7 @@ module.exports = {
 
   options: {
     projectRoot: './projects',
+    projectName:'projects',
     devServer: {
       host: 'localhost',
       port: 10086,
@@ -22,28 +23,18 @@ module.exports = {
           version: '',
           getIndexHtml: true
         },
-        match: '',
+        match: 'activities/activities1/views/index.html',
         entry: './projects/activities/activities1/index.js',
         jsBundles: [],
         cssBundles: []
       },
-      snap_up_center: {
+      activities2: {
         _metaInfo: {
           version: '',
           getIndexHtml: true
         },
-        match: '',
-        entry: './projects/snap_up_center/index.js',
-        jsBundles: [],
-        cssBundles: []
-      },
-      get_coupon: {
-        _metaInfo: {
-          version: '',
-          getIndexHtml: true
-        },
-        match: '',
-        entry: './projects/get_coupon/index.js',
+        match: 'activities/activities2/views/index.html',
+        entry: './projects/activities/activities2/index.js',
         jsBundles: [],
         cssBundles: []
       }
@@ -60,7 +51,7 @@ module.exports = {
           getIndexHtml: true
         },
         match: '',
-        entry: './projects/ms_pull_new/index.js',
+        entry: './projects/dialogs/message/index.js',
         jsBundles: [],
         cssBundles: []
       }

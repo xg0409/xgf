@@ -2,11 +2,12 @@ var path = require("path");
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var webpack = require("webpack");
+var cwd = process.cwd();
 module.exports = {
   entry: {},
   output: {
-    path: path.join(__dirname, "public/"),
-    filename: "${projectName}/[name]/bundle.js"
+    path: path.join(cwd,'/public'),
+    filename: "${moduleName}/[name]/bundle.js"
   },
   module: {
     loaders: [
@@ -25,6 +26,6 @@ module.exports = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new ExtractTextPlugin("activities/[name]/bundle.css", {allChunks: true})
+    new ExtractTextPlugin("${moduleName}/[name]/bundle.css", {allChunks: true})
   ]
 };

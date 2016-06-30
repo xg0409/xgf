@@ -1,6 +1,6 @@
-var projecstInfo = require('./projectsInfo.js');
+var projectsInfo = require('./projectsInfo.js');
 function initPromptConfig() {
-  var projectsConfig = projecstInfo.projects;
+  var projectsConfig = projectsInfo.projects;
   var questions = [];
 
   var projectConfig = {
@@ -32,8 +32,8 @@ function initPromptConfig() {
     };
 
     submoduleObject.choices.push({
-        value: 'build_all_'+projectName,
-        name: '======build_all_'+projectName
+        value: 'build_all_submodules',
+        name: '====== build_all_'+projectName+" ======"
     });
 
     Object.keys(projectsConfig[projectName]).forEach(function (submodule) {
@@ -47,19 +47,31 @@ function initPromptConfig() {
 
   });
 
-  Object.keys(projectsConfig).forEach(function (projectName) {
-    var submoduleObject = {
-      config: "build_all_judge",
-      type: 'Judge',
-      message: 'build all project?(yes/no)',
-      when: function (answers) {
-        var answer = answers['submodule_item'];
-        return answer === 'build_all_'+projectName;
-      }
-    };
+  // Object.keys(projectsConfig).forEach(function (projectName) {
+  //   var submoduleObject = {
+  //     config: "build_all_judge",
+  //     type: 'Judge',
+  //     message: 'build all project?(yes/no)',
+  //     when: function (answers) {
+  //       var answer = answers['submodule_item'];
+  //       return answer === 'build_all_submodules';
+  //     }
+  //   };
+  //
+  //   questions.push(submoduleObject);
+  // });
 
-    questions.push(submoduleObject);
-  });
+  var submoduleObject = {
+    config: "build_all_judge",
+    type: 'Judge',
+    message: 'build all project?(yes/no)',
+    when: function (answers) {
+      var answer = answers['submodule_item'];
+      return answer === 'build_all_submodules';
+    }
+  };
+
+  questions.push(submoduleObject);
 
   return {
     questions: questions

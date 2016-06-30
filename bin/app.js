@@ -14,13 +14,13 @@ var partials = require('express-partials');
 
 //__dirname变量获取当前模块文件所在目录的完整绝对路径
 // 视图引擎设置
-app.set('views', path.join(__dirname, '../app/'));
+app.set('views', path.join(__dirname, '../projects/'));
 app.set('view engine', 'html');
 app.engine('html', require('hbs').__express);
-hbs.registerPartials(__dirname + '../app/');
+hbs.registerPartials(__dirname + '../projects/');
 
 
-app.use(express.static(path.join(__dirname, '../app')));
+app.use(express.static(path.join(__dirname, '../projects')));
 app.use(favicon(path.join(__dirname, '../public', 'favicon.ico')));
 
 app.use(morgan('dev'));
@@ -42,6 +42,7 @@ app.param('user', function(req, res, next, id) {
 });
 
 app.use("/", function(req, res) {
+  console.log(1111)
   var path = req.path;
   var renderUrl = path;
   res.render(renderUrl);

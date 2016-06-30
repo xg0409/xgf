@@ -1,20 +1,19 @@
 var path = require("path");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var webpack = require("webpack");
-var projecstInfo = require('./projectsInfo.js');
+var projectsInfo = require('./projectsInfo.js');
 var _ = require('lodash');
-var cwd = process.cwd();
-var webpackConfigJson = require('../webpack.base.config');
+var webPackBaseConfig = require('../webpack.base.config');
 
-var webpackBaseConfig = function (isAllModules, parentModule, submodule) {
+var webPackBaseObject = function (isAllModules, parentModule, submodule) {
 
-  var entry = webpackConfigJson.entry;
-  var output = webpackConfigJson.output;
-  var module = webpackConfigJson.module;
-  var devServer = webpackConfigJson.devServer;
-  var plugins = webpackConfigJson.plugins;
-  var options = projecstInfo.options;
-  var projects = projecstInfo.projects;
+  var entry = webPackBaseConfig.entry;
+  var output = webPackBaseConfig.output;
+  var module = webPackBaseConfig.module;
+  var devServer = webPackBaseConfig.devServer;
+  var plugins = webPackBaseConfig.plugins;
+  var options = projectsInfo.options;
+  var projects = projectsInfo.projects;
 
   var defaultClientConfig = [
     "webpack-dev-server/client?http://${host}:${port}",
@@ -43,11 +42,10 @@ var webpackBaseConfig = function (isAllModules, parentModule, submodule) {
   }
 
   _.extend(output, {
-    path:path.join(cwd,'/public'),
     publicPath: options.devServer.publicPath
   }, _.mapValues(output, function (itemValue) {
     return _.template(itemValue)({
-      projectName: parentModule
+      moduleName: parentModule
     })
   }));
 
@@ -56,7 +54,8 @@ var webpackBaseConfig = function (isAllModules, parentModule, submodule) {
       if (_.isObject(itemVlaue)) {
            _.extend(itemVlaue,_.mapValues(itemVlaue,function(subItemVlaue){
             return _.template(subItemVlaue)({
-              projectName:parentModule
+              moduleName:parentModule,
+              projectName:options.projectName
             })
           }));
       }
@@ -70,19 +69,16 @@ var webpackBaseConfig = function (isAllModules, parentModule, submodule) {
     contentBase: options.projectRoot
   };
 
-  // _(plugins).forEach(function(itemObject){
-  //   if(_.isObject(itemObject)){
-  //     _.extend(itemObject, _.mapValues(itemObject, function (itemValue) {
-  //       return _.template(itemValue)({
-  //         projectName:parentModule
-  //       })
-  //     }));
-  //   }
-  // });
-
-
-
-
+  _(plugins).forEach(function(itemObject){
+    if(_.isObject(itemObject)){
+      _.extend(itemObject, _.mapValues(itemObject, function (itemValue) {
+        return _.template(itemValue)({
+          moduleName:parentModule
+        })
+      }));
+    }
+  });
+  
   return {
     entry: entry,
     output: output,
@@ -95,4 +91,4 @@ var webpackBaseConfig = function (isAllModules, parentModule, submodule) {
 };
 
 
-module.exports = webpackBaseConfig;
+module.exports = webPackBaseObject;
