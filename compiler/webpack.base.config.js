@@ -25,6 +25,6 @@ module.exports = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new ExtractTextPlugin("${projectName}/[name]/bundle.css", {allChunks: true})
+    new ExtractTextPlugin("activities/[name]/bundle.css", {allChunks: true})
   ]
 };

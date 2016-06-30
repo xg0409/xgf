@@ -3,10 +3,11 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var webpack = require("webpack");
 var projecstInfo = require('./projectsInfo.js');
 var _ = require('lodash');
+var cwd = process.cwd();
 var webpackConfigJson = require('../webpack.base.config');
 
 var webpackBaseConfig = function (isAllModules, parentModule, submodule) {
-  
+
   var entry = webpackConfigJson.entry;
   var output = webpackConfigJson.output;
   var module = webpackConfigJson.module;
@@ -19,8 +20,13 @@ var webpackBaseConfig = function (isAllModules, parentModule, submodule) {
     "webpack-dev-server/client?http://${host}:${port}",
     "webpack/hot/dev-server"
   ];
-  defaultClientConfig[0] = defaultClientConfig[0].replace("${host}", options.devServer.host);
-  defaultClientConfig[0] = defaultClientConfig[0].replace("${port}", options.devServer.port);
+
+  _.extend(defaultClientConfig, _.mapValues(defaultClientConfig, function (itemValue) {
+    return _.template(itemValue)({
+      host: options.devServer.host,
+      port: options.devServer.port
+    })
+  }));
 
   if (isAllModules) {
     Object.keys(projects[parentModule]).forEach(function (projectName) {
@@ -37,31 +43,52 @@ var webpackBaseConfig = function (isAllModules, parentModule, submodule) {
   }
 
   _.extend(output, {
-    publicPath: options.devServer.publicPath,
-    filename: output.replace("${projectName}", parentModule)
+    path:path.join(cwd,'/public'),
+    publicPath: options.devServer.publicPath
+  }, _.mapValues(output, function (itemValue) {
+    return _.template(itemValue)({
+      projectName: parentModule
+    })
+  }));
+
+  _(module.loaders).forEach(function (loaderItem) {
+    _.extend(loaderItem, _.mapValues(loaderItem, function (itemVlaue) {
+      if (_.isObject(itemVlaue)) {
+           _.extend(itemVlaue,_.mapValues(itemVlaue,function(subItemVlaue){
+            return _.template(subItemVlaue)({
+              projectName:parentModule
+            })
+          }));
+      }
+      return itemVlaue;
+    }));
   });
 
-  module = {
-    loaders: [
-      {test: /\.css$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader")},
-      {test: /\.less$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader!less-loader")},
-      {
-        test: /\.(png|jpg|gif)$/,
-        loader: "url-loader",
-        query: {limit: 5000, context: '{%=parentModule%}', name: '[path][name].[ext]'}
-      }
-    ]
-  };
 
   devServer = {
     //选项指定服务器静态资源的路径
-    contentBase: './app/'
+    contentBase: options.projectRoot
   };
+
+  // _(plugins).forEach(function(itemObject){
+  //   if(_.isObject(itemObject)){
+  //     _.extend(itemObject, _.mapValues(itemObject, function (itemValue) {
+  //       return _.template(itemValue)({
+  //         projectName:parentModule
+  //       })
+  //     }));
+  //   }
+  // });
+
+
 
 
   return {
     entry: entry,
-    output: output
+    output: output,
+    module:module,
+    devServer:devServer,
+    plugins:plugins
   }
 
 

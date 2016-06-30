@@ -50,7 +50,7 @@ module.exports = function(grunt) {
 
     nodemon: {
       server: {
-        script: './bin/app.js',
+        script: './bin/projects.js',
         options: {
           nodeArgs: [ /*'--debug' */ ],
           ignore: ['node_modules/**'],
@@ -58,9 +58,8 @@ module.exports = function(grunt) {
             PORT: 8090,
             // for development, isomorphic server rendering
             NODE_ENV: '',
-            DEBUG: 'app:*,',
+            DEBUG: 'projects:*,',
             DEBUG_COLORS: true,
-            USERNAME: 'XG'
           },
           ext: 'js,jsx,html,ejs',
         }

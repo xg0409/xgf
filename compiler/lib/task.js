@@ -1,6 +1,6 @@
 var projectInfo = require('./projectsInfo.js');
 var initPromptConfig = require('./initPromptConfig.js');
-var webpackBaseConfig = require('./webpackBaseConfig.js');
+var webpackBaseObject = require('./webpackBaseConfig.js');
 
 var initBuild = function (grunt) {
 
@@ -9,22 +9,33 @@ var initBuild = function (grunt) {
    * demo:https://github.com/xg0409/grunt-prompt-demo
    */
   grunt.registerTask('prod-build', 'production build task', function () {
-    var entry = webpackBaseConfig(false,'app','ms_pull_new');
+    var webPackConfig = webpackBaseObject(false, 'activities', 'activities1');
+
+    var webpack = {
+      options: webPackConfig,
+      "build-dev": {
+        devtool: "sourcemap",
+        debug: true
+      }
+    };
+
+    grunt.config.set('webpack', webpack);
+    grunt.task.run(['webpack:build-dev']);
     var prodBuild = {
       options: {
         questions: initPromptConfig.questions,
         then: function (results, done) {
           console.log('prompt json:', results);
 
-          console.log('xgx:',entry)
+          // console.log('xgx:',entry)
         }
       }
     }
 
-    grunt.config.set('prompt', {
-      prodBuild: prodBuild
-    });
-    grunt.task.run(['prompt:prodBuild']);
+    // grunt.config.set('prompt', {
+    //   prodBuild: prodBuild
+    // });
+    // grunt.task.run(['prompt:prodBuild']);
   });
 
 
