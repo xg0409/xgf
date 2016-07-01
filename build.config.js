@@ -8,7 +8,8 @@ module.exports = {
       host: 'localhost',
       port: 10086,
       publicPath: 'http://localhost:10086/public/'
-    }
+    },
+    imageProdUrl:"http://css.40017.com/webapp/"
   },
 
   projects: {

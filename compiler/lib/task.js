@@ -14,7 +14,6 @@ var initBuild = function (grunt) {
         questions: initPromptConfig.questions,
         then: function (results, done) {
           console.log("prompt_results", results);
-
           var project_item = results.project_item;
           var submodule_item = results.submodule_item;
           var build_all_judge = results.build_all_judge == 'yes' ? true : false;
@@ -24,6 +23,7 @@ var initBuild = function (grunt) {
           }
           var webPackBaseConfig = webPackBaseObject(build_all_judge, project_item, submodule_item);
           var webPackProdConfig = require('../webpack.prod.config.js')(webPackBaseConfig);
+          console.log("process.env.NODE_ENV",process.env.NODE_ENV)
           var webpack = {
             options: webPackProdConfig,
             "prod-build": {}
@@ -75,7 +75,7 @@ var initBuild = function (grunt) {
   });
 
 
-  grunt.registerTask('hot', 'develop build task', function () {
+  grunt.registerTask('hot', 'hot build task', function () {
     var devBuild = {
       options: {
         questions: initPromptConfig.questions,

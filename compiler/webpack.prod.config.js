@@ -1,6 +1,7 @@
 'use strict';
 
 var webpack = require('webpack');
+var projectsInfo = require('./lib/projectsInfo.js');
 
 module.exports = function (webPackProdConfig) {
 
@@ -15,7 +16,7 @@ module.exports = function (webPackProdConfig) {
       sourceMap: false
     })
   ]);
-  webPackProdConfig.output.publicPath = "http://css.40017.com/webapp/";
+  webPackProdConfig.output.publicPath = projectsInfo.options.imageProdUrl;
 
   return webPackProdConfig;
 };
