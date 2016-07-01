@@ -16,7 +16,7 @@ module.exports = function (webPackProdConfig) {
       sourceMap: false
     })
   ]);
-  webPackProdConfig.output.publicPath = projectsInfo.options.imageProdUrl;
+  webPackProdConfig.output.publicPath = projectsInfo.options.assets.prod;
 
   return webPackProdConfig;
 };
