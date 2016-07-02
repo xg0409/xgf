@@ -11,26 +11,36 @@
   <meta name="apple-touch-fullscreen" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   <title>{{title}}</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.minimum-scale=1.0, user-scalable=no">
   <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
+  <script src="//cdn.bootcss.com/jquery-json/2.5.1/jquery.json.min.js"></script>
   <link rel="stylesheet" type="text/css" href="http://localhost:10086/public/activities/activities1/bundle.css">
   <script type="text/javascript" src="http://localhost:10086/public/activities/activities1/bundle.js"></script>
   <script type="application/javascript">
     $(function(){
-      $.ajax({
-        type: 'POST',
-        url: '/api/getInfo' ,
-        data: {name:'xg'} ,
-        success: function(data){
-          console.log(data);
-        } ,
-        dataType: "json"
+      $("#getAjaxData").click(function(){
+        $.ajax({
+          type: 'POST',
+          url: '/api/getInfo' ,
+          data: {name:'xg'} ,
+          success: function(data){
+            console.log(data);
+            $("#ajaxResultStr").html($.toJSON(data));
+          } ,
+          dataType: "json"
+        });
       });
+
     });
   </script>
 </head>
 
 <body>
+  <div>
+    <div>
+      <input type="button" id="getAjaxData" value="获取ajax请求结果">
+    </div>
+    <div id="ajaxResultStr"></div>
+  </div>
   <div class="img"></div>
 
 </body>
