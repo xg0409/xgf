@@ -32,33 +32,6 @@ var ajaxRouter =require('./routes/ajaxRouter');
 app.use('/api', cors(), ajaxRouter);
 app.use('/', cors(), router);
 
-// app.use('*', function(req, res){
-//   // var renderParams = getRenderParams(req, NODE_ENV);
-//   // var cssTemplate = '<link rel="stylesheet" type="text/css" href="${resourceUrl}">';
-//   // var jsTemplate = '<script type="text/javascript" src="${resourceUrl}"></script>';
-//   // var cssList = "";
-//   // var jsList = "";
-//   // renderParams.cssBundles.map(function (cssUrl) {
-//   //   cssList += _.template(cssTemplate)({
-//   //     resourceUrl: cssUrl
-//   //   })
-//   // });
-//   // renderParams.jsBundles.map(function (jsUrl) {
-//   //   jsList += _.template(jsTemplate)({
-//   //     resourceUrl: jsUrl
-//   //   })
-//   // });
-//   var renderUrl = urlHandle(req.originalUrl+"views/index");
-//
-//   console.log("renderUrl",renderUrl)
-//   res.render(renderUrl, {
-//     title:'XG TITLE'
-//     // cssList: cssList,
-//     // jsList: jsList
-//   });
-//
-// });
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
