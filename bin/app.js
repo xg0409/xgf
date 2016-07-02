@@ -1,74 +1,65 @@
 var express = require('express');
 var app = express();
-var path = require('path');
-var fs = require('fs');
-var favicon = require('serve-favicon');
-//morgan在控制台中，显示req请求的信息
-var morgan = require('morgan');
-var hbs = require('hbs');
-var port = process.env.PORT || "8090";
-var _ = require('lodash');
 
+var path = require('path');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var partials = require('express-partials');
-var getRenderParams = require('./buildConfig.js');
-var NODE_ENV = app.get('env') || 'production';
 
-//__dirname变量获取当前模块文件所在目录的完整绝对路径
-// 视图引擎设置
-app.set('views', path.join(__dirname, 'views/'));
+var swig = require('swig');
+app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
-app.engine('html', hbs.__express);
-hbs.registerPartials(path.join(__dirname, 'views/'));
+app.set('views',path.join( __dirname , '../projects/'));
 
 
-app.use(express.static(path.join(__dirname, '../public/')));
-app.use(favicon(path.join(__dirname, '../public', 'favicon.ico')));
-
-app.use(morgan('dev'));
+app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.param('user', function (req, res, next, id) {
-  User.find(id, function (err, user) {
-    if (err) {
-      next(err);
-    } else if (user) {
-      req.user = user;
-      next();
-    } else {
-      next(new Error('failed to load user'));
-    }
-  });
-});
+app.use(express.static(path.join(__dirname, '../projects/')));
+var getRenderParams = require('./buildConfig');
 
-app.use("/", function (req, res) {
-  var renderParams = getRenderParams(req, NODE_ENV);
-  var cssTemplate = '<link rel="stylesheet" type="text/css" href="${resourceUrl}">';
-  var jsTemplate = '<script type="text/javascript" src="${resourceUrl}"></script>';
-  var cssList = "";
-  var jsList = "";
-  renderParams.cssBundles.map(function (cssUrl) {
-    cssList += _.template(cssTemplate)({
-      resourceUrl: cssUrl
-    })
-  });
-  renderParams.jsBundles.map(function (jsUrl) {
-    jsList += _.template(jsTemplate)({
-      resourceUrl: jsUrl
-    })
-  });
-  var renderUrl = req.path;
-  res.render(renderUrl, {
-    cssList: cssList,
-    jsList: jsList
-  });
-});
+var cors = require('cors');
+var port = process.env.PORT || 40000;
+
+var router = require('./routes/router');
+var ajaxRouter =require('./routes/ajaxRouter');
+
+
+app.use('/api', cors(), ajaxRouter);
+app.use('/', cors(), router);
+
+// app.use('*', function(req, res){
+//   // var renderParams = getRenderParams(req, NODE_ENV);
+//   // var cssTemplate = '<link rel="stylesheet" type="text/css" href="${resourceUrl}">';
+//   // var jsTemplate = '<script type="text/javascript" src="${resourceUrl}"></script>';
+//   // var cssList = "";
+//   // var jsList = "";
+//   // renderParams.cssBundles.map(function (cssUrl) {
+//   //   cssList += _.template(cssTemplate)({
+//   //     resourceUrl: cssUrl
+//   //   })
+//   // });
+//   // renderParams.jsBundles.map(function (jsUrl) {
+//   //   jsList += _.template(jsTemplate)({
+//   //     resourceUrl: jsUrl
+//   //   })
+//   // });
+//   var renderUrl = urlHandle(req.originalUrl+"views/index");
+//
+//   console.log("renderUrl",renderUrl)
+//   res.render(renderUrl, {
+//     title:'XG TITLE'
+//     // cssList: cssList,
+//     // jsList: jsList
+//   });
+//
+// });
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
@@ -79,7 +70,7 @@ app.use(function (req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use(function (err, req, res, next) {
+  app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
@@ -90,7 +81,7 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function (err, req, res, next) {
+app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,
@@ -98,11 +89,18 @@ app.use(function (err, req, res, next) {
   });
 });
 
-
-var server = app.listen(port, function () {
-  console.log('Listening on port %d', server.address().port);
+var server = app.listen(port, function() {
+  console.log('===Express server listening on port %d ===', server.address().port);
 });
 
+
+function urlHandle(url){
+  if(!url){return ""};
+  if(url.indexOf("/") == 0){
+    return url.substring(1);
+  }
+  return url;
+}
 
 
 module.exports = app;
